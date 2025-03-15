@@ -17,6 +17,8 @@ type AnchorSelfCPILogSwapData struct {
 	Timestamp            int64
 	VirtualSolReserves   uint64
 	VirtualTokenReserves uint64
+	IDontKnow1           uint64
+	IDontKnow2           uint64
 }
 
 func AnchorSelfCPILogSwapParser(decodedData []byte) (*types.PumpFunAnchorSelfCPILogSwapAction, error) {
@@ -40,6 +42,8 @@ func AnchorSelfCPILogSwapParser(decodedData []byte) (*types.PumpFunAnchorSelfCPI
 		Timestamp:            data.Timestamp,
 		VirtualTokenReserves: data.VirtualTokenReserves,
 		VirtualSolReserves:   data.VirtualSolReserves,
+		IDontKnow1:           data.IDontKnow1,
+		IDontKnow2:           data.IDontKnow2,
 	}
 
 	return &action, nil

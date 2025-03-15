@@ -1,6 +1,8 @@
 package parsers
 
 import (
+	"errors"
+
 	solanago "github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
 	"github.com/near/borsh-go"
@@ -21,7 +23,15 @@ func CreateParser(meta *rpc.TransactionMeta, txn *solanago.Transaction, instruct
 	if err != nil {
 		return nil, err
 	}
-
+	maxAccountIdx := uint16(0)
+	for _, idx := range []uint16{instruction.Accounts[7], instruction.Accounts[0], instruction.Accounts[1], instruction.Accounts[2], instruction.Accounts[3], instruction.Accounts[5], instruction.Accounts[6]} {
+		if idx > maxAccountIdx {
+			maxAccountIdx = idx
+		}
+	}
+	if int(maxAccountIdx) >= len(txn.Message.AccountKeys) {
+		return nil, errors.New("account index out of range")
+	}
 	action := types.PumpFunCreateAction{
 		BaseAction: types.BaseAction{
 			ProgramID:       pumpfun.Program,

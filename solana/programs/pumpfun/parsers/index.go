@@ -13,10 +13,12 @@ func InstructionRouter(meta *rpc.TransactionMeta, txn *solanago.Transaction, ins
 	discriminator := *(*[8]byte)(decode[:8])
 
 	switch discriminator {
+	/**
 	case pumpfun.BuyDiscriminator:
 		return BuyParser(meta, txn, instruction, decode)
 	case pumpfun.SellDiscriminator:
 		return SellParser(meta, txn, instruction, decode)
+	*/
 	case pumpfun.CreateDiscriminator:
 		return CreateParser(meta, txn, instruction, decode)
 	case pumpfun.AnchorSelfCPILogDiscriminator:

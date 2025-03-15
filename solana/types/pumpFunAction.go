@@ -45,4 +45,6 @@ type PumpFunAnchorSelfCPILogSwapAction struct {
 	Timestamp            int64  `json:"timestamp"`
 	VirtualSolReserves   uint64 `json:"virtualSolReserves"`
 	VirtualTokenReserves uint64 `json:"virtualTokenReserves"`
+	IDontKnow1           uint64 `json:"iDontKnow1"`
+	IDontKnow2           uint64 `json:"iDontKnow2"`
 }
