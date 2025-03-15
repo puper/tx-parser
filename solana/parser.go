@@ -1,10 +1,10 @@
 package solana
 
 import (
-	"encoding/json"
-	"github.com/0xjeffro/tx-parser/solana/types"
+	"github.com/puper/tx-parser/solana/types"
 )
 
+/**
 func Parser(rpcData []byte) ([]types.ParsedResult, error) {
 	var txs types.RawTxs
 	err := json.Unmarshal(rpcData, &txs)
@@ -42,6 +42,7 @@ func TxParser(tx types.RawTx) *types.ParsedResult {
 	}
 	return &result
 }
+*/
 
 func GetAccountList(result *types.ParsedResult) *types.ParsedResult {
 	length := len(result.RawTx.Transaction.Message.AccountKeys) +

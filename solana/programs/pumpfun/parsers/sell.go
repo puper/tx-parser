@@ -1,11 +1,12 @@
 package parsers
 
 import (
-	"github.com/0xjeffro/tx-parser/solana/globals"
-	"github.com/0xjeffro/tx-parser/solana/programs/pumpfun"
-	"github.com/0xjeffro/tx-parser/solana/types"
-	"github.com/mr-tron/base58"
+	solanago "github.com/gagliardetto/solana-go"
+	"github.com/gagliardetto/solana-go/rpc"
 	"github.com/near/borsh-go"
+	"github.com/puper/tx-parser/solana/globals"
+	"github.com/puper/tx-parser/solana/programs/pumpfun"
+	"github.com/puper/tx-parser/solana/types"
 )
 
 type SellData struct {
@@ -14,23 +15,23 @@ type SellData struct {
 	MinSolOutput  uint64
 }
 
-func SellParser(result *types.ParsedResult, instruction types.Instruction, decodedData []byte) (*types.PumpFunSellAction, error) {
+func SellParser(meta *rpc.TransactionMeta, txn *solanago.Transaction, instruction solanago.CompiledInstruction, decodedData []byte) (*types.PumpFunSellAction, error) {
 	var sellData SellData
 	err := borsh.Deserialize(&sellData, decodedData)
 	if err != nil {
 		return nil, err
 	}
 
-	var instructionIndex int
-	for idx, instr := range result.RawTx.Transaction.Message.Instructions {
-		if result.AccountList[instr.ProgramIDIndex] == pumpfun.Program && instr.Data == instruction.Data {
-			instructionIndex = idx
+	var instructionIndex uint16
+	for idx, instr := range txn.Message.Instructions {
+		if txn.Message.AccountKeys[instr.ProgramIDIndex].String() == pumpfun.Program && instr.Data.String() == instruction.Data.String() {
+			instructionIndex = uint16(idx)
 			break
 		}
 	}
 
-	var instructions []types.Instruction
-	for _, innerInstruction := range result.RawTx.Meta.InnerInstructions {
+	var instructions []solanago.CompiledInstruction
+	for _, innerInstruction := range meta.InnerInstructions {
 		if innerInstruction.Index == instructionIndex {
 			instructions = innerInstruction.Instructions
 			break
@@ -41,10 +42,10 @@ func SellParser(result *types.ParsedResult, instruction types.Instruction, decod
 	sellSolAmount := uint64(0)
 
 	for _, instr := range instructions {
-		programId := result.AccountList[instr.ProgramIDIndex]
+		programId := txn.Message.AccountKeys[instr.ProgramIDIndex].String()
 		if programId == pumpfun.Program {
 			data := instr.Data
-			decode, err := base58.Decode(data)
+			decode := data
 			if err != nil {
 				return nil, err
 			}
@@ -68,8 +69,8 @@ func SellParser(result *types.ParsedResult, instruction types.Instruction, decod
 			ProgramName:     pumpfun.ProgramName,
 			InstructionName: "Sell",
 		},
-		Who:             result.AccountList[instruction.Accounts[6]],
-		FromToken:       result.AccountList[instruction.Accounts[2]],
+		Who:             txn.Message.AccountKeys[instruction.Accounts[6]].String(),
+		FromToken:       txn.Message.AccountKeys[instruction.Accounts[2]].String(),
 		ToToken:         globals.WSOL,
 		FromTokenAmount: sellTokenAmount,
 		ToTokenAmount:   sellSolAmount,

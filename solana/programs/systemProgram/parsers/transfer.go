@@ -1,9 +1,9 @@
 package parsers
 
 import (
-	"github.com/0xjeffro/tx-parser/solana/programs/systemProgram"
-	"github.com/0xjeffro/tx-parser/solana/types"
 	"github.com/near/borsh-go"
+	"github.com/puper/tx-parser/solana/programs/systemProgram"
+	"github.com/puper/tx-parser/solana/types"
 )
 
 type TransferData struct {

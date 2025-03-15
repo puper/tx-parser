@@ -1,6 +1,6 @@
 package OKXDEXAggregationRouterV2
 
-import "github.com/0xjeffro/tx-parser/solana/types"
+import "github.com/puper/tx-parser/solana/types"
 
 type CommissionSplProxySwapAction struct {
 	types.BaseAction

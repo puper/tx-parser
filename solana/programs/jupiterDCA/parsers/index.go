@@ -1,9 +1,9 @@
 package parsers
 
 import (
-	"github.com/0xjeffro/tx-parser/solana/programs/jupiterDCA"
-	"github.com/0xjeffro/tx-parser/solana/types"
 	"github.com/mr-tron/base58"
+	"github.com/puper/tx-parser/solana/programs/jupiterDCA"
+	"github.com/puper/tx-parser/solana/types"
 )
 
 func InstructionRouter(result *types.ParsedResult, instruction types.Instruction) (types.Action, error) {

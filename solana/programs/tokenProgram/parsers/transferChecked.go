@@ -2,9 +2,9 @@ package parsers
 
 import (
 	"encoding/binary"
-	"github.com/0xjeffro/tx-parser/solana/programs/tokenProgram"
-	"github.com/0xjeffro/tx-parser/solana/types"
 	"github.com/near/borsh-go"
+	"github.com/puper/tx-parser/solana/programs/tokenProgram"
+	"github.com/puper/tx-parser/solana/types"
 )
 
 func TransferCheckedParser(result *types.ParsedResult, instruction types.Instruction, decodedData []byte) (*types.TokenProgramTransferCheckedAction, error) {

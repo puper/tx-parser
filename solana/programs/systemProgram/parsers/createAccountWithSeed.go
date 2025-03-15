@@ -2,9 +2,9 @@ package parsers
 
 import (
 	"encoding/binary"
-	"github.com/0xjeffro/tx-parser/solana/programs/systemProgram"
-	"github.com/0xjeffro/tx-parser/solana/types"
 	solanago "github.com/gagliardetto/solana-go"
+	"github.com/puper/tx-parser/solana/programs/systemProgram"
+	"github.com/puper/tx-parser/solana/types"
 )
 
 func CreateAccountWithSeedParser(result *types.ParsedResult, instruction types.Instruction, decodedData []byte) (*types.SystemProgramCreateAccountWithSeedAction, error) {

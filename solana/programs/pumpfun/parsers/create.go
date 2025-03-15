@@ -1,9 +1,11 @@
 package parsers
 
 import (
-	"github.com/0xjeffro/tx-parser/solana/programs/pumpfun"
-	"github.com/0xjeffro/tx-parser/solana/types"
+	solanago "github.com/gagliardetto/solana-go"
+	"github.com/gagliardetto/solana-go/rpc"
 	"github.com/near/borsh-go"
+	"github.com/puper/tx-parser/solana/programs/pumpfun"
+	"github.com/puper/tx-parser/solana/types"
 )
 
 type CreateData struct {
@@ -13,7 +15,7 @@ type CreateData struct {
 	Uri           string
 }
 
-func CreateParser(result *types.ParsedResult, instruction types.Instruction, decodedData []byte) (*types.PumpFunCreateAction, error) {
+func CreateParser(meta *rpc.TransactionMeta, txn *solanago.Transaction, instruction solanago.CompiledInstruction, decodedData []byte) (*types.PumpFunCreateAction, error) {
 	var createData CreateData
 	err := borsh.Deserialize(&createData, decodedData)
 	if err != nil {
@@ -26,13 +28,13 @@ func CreateParser(result *types.ParsedResult, instruction types.Instruction, dec
 			ProgramName:     pumpfun.ProgramName,
 			InstructionName: "Create",
 		},
-		Who:                    result.AccountList[instruction.Accounts[7]],
-		Mint:                   result.AccountList[instruction.Accounts[0]],
-		MintAuthority:          result.AccountList[instruction.Accounts[1]],
-		BondingCurve:           result.AccountList[instruction.Accounts[2]],
-		AssociatedBondingCurve: result.AccountList[instruction.Accounts[3]],
-		MplTokenMetadata:       result.AccountList[instruction.Accounts[5]],
-		MetaData:               result.AccountList[instruction.Accounts[6]],
+		Who:                    txn.Message.AccountKeys[instruction.Accounts[7]].String(),
+		Mint:                   txn.Message.AccountKeys[instruction.Accounts[0]].String(),
+		MintAuthority:          txn.Message.AccountKeys[instruction.Accounts[1]].String(),
+		BondingCurve:           txn.Message.AccountKeys[instruction.Accounts[2]].String(),
+		AssociatedBondingCurve: txn.Message.AccountKeys[instruction.Accounts[3]].String(),
+		MplTokenMetadata:       txn.Message.AccountKeys[instruction.Accounts[5]].String(),
+		MetaData:               txn.Message.AccountKeys[instruction.Accounts[6]].String(),
 		Name:                   createData.Name,
 		Symbol:                 createData.Symbol,
 		Uri:                    createData.Uri,

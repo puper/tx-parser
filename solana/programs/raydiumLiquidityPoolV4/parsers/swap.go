@@ -1,12 +1,12 @@
 package parsers
 
 import (
-	"github.com/0xjeffro/tx-parser/solana/globals"
-	"github.com/0xjeffro/tx-parser/solana/programs/raydiumLiquidityPoolV4"
-	"github.com/0xjeffro/tx-parser/solana/programs/tokenProgram"
-	TokenProgramParsers "github.com/0xjeffro/tx-parser/solana/programs/tokenProgram/parsers"
-	"github.com/0xjeffro/tx-parser/solana/types"
 	"github.com/near/borsh-go"
+	"github.com/puper/tx-parser/solana/globals"
+	"github.com/puper/tx-parser/solana/programs/raydiumLiquidityPoolV4"
+	"github.com/puper/tx-parser/solana/programs/tokenProgram"
+	TokenProgramParsers "github.com/puper/tx-parser/solana/programs/tokenProgram/parsers"
+	"github.com/puper/tx-parser/solana/types"
 )
 
 type SwapData struct {

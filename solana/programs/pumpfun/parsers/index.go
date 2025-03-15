@@ -1,26 +1,24 @@
 package parsers
 
 import (
-	"github.com/0xjeffro/tx-parser/solana/programs/pumpfun"
-	"github.com/0xjeffro/tx-parser/solana/types"
-	"github.com/mr-tron/base58"
+	solanago "github.com/gagliardetto/solana-go"
+	"github.com/gagliardetto/solana-go/rpc"
+	"github.com/puper/tx-parser/solana/programs/pumpfun"
+	"github.com/puper/tx-parser/solana/types"
 )
 
-func InstructionRouter(result *types.ParsedResult, instruction types.Instruction) (types.Action, error) {
+func InstructionRouter(meta *rpc.TransactionMeta, txn *solanago.Transaction, instruction solanago.CompiledInstruction) (types.Action, error) {
 	data := instruction.Data
-	decode, err := base58.Decode(data)
-	if err != nil {
-		return nil, err
-	}
+	decode := data
 	discriminator := *(*[8]byte)(decode[:8])
 
 	switch discriminator {
 	case pumpfun.BuyDiscriminator:
-		return BuyParser(result, instruction, decode)
+		return BuyParser(meta, txn, instruction, decode)
 	case pumpfun.SellDiscriminator:
-		return SellParser(result, instruction, decode)
+		return SellParser(meta, txn, instruction, decode)
 	case pumpfun.CreateDiscriminator:
-		return CreateParser(result, instruction, decode)
+		return CreateParser(meta, txn, instruction, decode)
 	case pumpfun.AnchorSelfCPILogDiscriminator:
 		subDiscriminator := *(*[8]byte)(decode[8:16])
 		switch subDiscriminator {
@@ -29,7 +27,7 @@ func InstructionRouter(result *types.ParsedResult, instruction types.Instruction
 		default:
 			return types.UnknownAction{
 				BaseAction: types.BaseAction{
-					ProgramID:       result.AccountList[instruction.ProgramIDIndex],
+					ProgramID:       txn.Message.AccountKeys[instruction.ProgramIDIndex].String(),
 					ProgramName:     pumpfun.ProgramName,
 					InstructionName: "AnchorSelfCPILog Unknown",
 				},
@@ -39,7 +37,7 @@ func InstructionRouter(result *types.ParsedResult, instruction types.Instruction
 	default:
 		return types.UnknownAction{
 			BaseAction: types.BaseAction{
-				ProgramID:       result.AccountList[instruction.ProgramIDIndex],
+				ProgramID:       txn.Message.AccountKeys[instruction.ProgramIDIndex].String(),
 				ProgramName:     pumpfun.ProgramName,
 				InstructionName: "Unknown",
 			},
